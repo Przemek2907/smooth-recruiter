@@ -10,16 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
-//TODO co daje enableWebSecurity
-
-// od tej pory ta klasa nadpisuje domysla konfihuracje security springa
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -54,6 +45,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/login/**").permitAll()
+                .antMatchers("/v2/**").permitAll()
+                .antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", "/swagger-ui.html", "/webjars/**","/swagger-resources/configuration/ui","/swagger-ui.html").permitAll()
                 .antMatchers("/api/users/**").permitAll()
                 .antMatchers("/api/user").hasRole("USER")
                 .antMatchers("/api/admin").hasRole("ADMIN")
@@ -65,14 +58,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), appTokensService));
     }
 
-    // in this method I am setting one of a few authentication methods (choosing how users will be looked up during authentication):
-    // there are 4
-    // an in-memory user store
-    // a jdbc-based user store
-    // an LDAP-backed user store
-    // a custom user details service (used here)
-
-    //enkoduje haslo i podpina uzytkownikow z bazy
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());

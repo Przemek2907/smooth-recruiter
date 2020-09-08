@@ -98,7 +98,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setHeader(REFRESH_TOKEN_HEADER_STRING, appTokensService.tokenBearer + " " + refreshToken);
 
 
-        response.getWriter().append(bodyWithTokens.getData().toString());
+        response.getWriter().write(new ObjectMapper().writeValueAsString(bodyWithTokens.getData().toString()));
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().flush();
