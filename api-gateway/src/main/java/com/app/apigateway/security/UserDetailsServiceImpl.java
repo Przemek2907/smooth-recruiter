@@ -5,6 +5,7 @@ import com.app.apigateway.dto.Role;
 import com.app.apigateway.proxy.FindUserProxy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+
     private final FindUserProxy findUserProxy;
 
     @Override
@@ -36,6 +38,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 getUser(username).getData();
 
         log.info("My getUserDto object is {}", userDto );
+
+        if (userDto == null) {
+            throw new UsernameNotFoundException("Username : " + username + " was not found");
+        }
 
         return new org.springframework.security.core.userdetails.User(
                 userDto.getUsername(),

@@ -33,15 +33,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors()
-
                 .and()
                 .csrf().disable()
-
-                //.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-
-                //.and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
                 .and()
                 .authorizeRequests()
                 .antMatchers("/login/**").permitAll()
@@ -52,10 +46,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/admin").hasRole("ADMIN")
                 .antMatchers("/api/user-admin").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
-
                 .and()
                 .addFilter(new com.app.apigateway.security.JwtAuthenticationFilter(authenticationManager(), appTokensService))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), appTokensService));
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), appTokensService))
+                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
     }
 
     @Override
