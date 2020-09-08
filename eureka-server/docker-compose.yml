@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+
+  db-container:
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root123
+      - MYSQL_DATABASE=rest_api_prices_db
+      - MYSQL_USER=super_user
+      - MYSQL_PASSWORD=test123
+    ports:
+      - 3306:3306
+    volumes:
+      - app-volume:/data/mysql
+    networks:
+      - app-network
+
+  backend-service:
+    image: dbwebservice
+    restart: always
+    build:
+      context: ./dbwebservice
+      dockerfile: Dockerfile
+    depends_on:
+      - db-container
+    ports:
+      - 6082:6082
+    volumes:
+      - app-volume:/data/backend-service
+    networks:
+      - app-network
+
+networks:
+  app-network:
+volumes:
+  app-volume: {}

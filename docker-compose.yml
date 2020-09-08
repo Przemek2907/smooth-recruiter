@@ -1,0 +1,59 @@
+version: '3.7'
+
+services:
+
+  db-container:
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root123
+      - MYSQL_DATABASE=microservices_db
+      - MYSQL_USER=super_user
+      - MYSQL_PASSWORD=test123
+    ports:
+      - 3306
+    networks:
+      - app-network
+
+  eureka-server:
+    image: eureka-server
+    restart: always
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    ports:
+      - 8761:8761
+    networks:
+      - app-network
+
+  users-service:
+    image: users-service
+    restart: always
+    build:
+      context: ./users-service
+      dockerfile: Dockerfile
+    ports:
+      - 8100:8100
+    depends_on:
+      - eureka-server
+      - db-container
+    networks:
+      - app-network
+
+  api-gateway:
+    image: api-gateway
+    restart: always
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - 8200:8200
+    depends_on:
+      - eureka-server
+    networks:
+      - app-network
+
+networks:
+  app-network:
+volumes:
+  app-volume: {}

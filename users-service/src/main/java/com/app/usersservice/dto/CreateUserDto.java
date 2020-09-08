@@ -1,0 +1,20 @@
+package com.app.usersservice.dto;
+
+import com.app.usersservice.model.Role;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class CreateUserDto {
+
+    private Long id;
+    private String username;
+    private String password;
+    private String passwordConfirmation;
+    private Role role;
+}
