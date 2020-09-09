@@ -16,4 +16,14 @@ public class UserController {
     public ResponseData accessForAll() {
         return ResponseData.builder().data("ACCESS FOR ALL").build();
     }
+
+    @GetMapping("/api/user")
+    public ResponseData accessForUser() {
+        return ResponseData.builder().data("ACCESS FOR USER").build();
+    }
+
+    @GetMapping("/api/admin")
+    public ResponseData accessForAdmin() {
+        return ResponseData.builder().data("ACCESS FOR ADMIN").build();
+    }
 }

@@ -21,7 +21,9 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         PrintWriter writer = response.getWriter();
-        writer.println("HTTP Status 401 - " + authEx.getMessage());
+        writer.println("Cannot access this resource. " + authEx.getMessage());
+        writer.flush();
+        writer.close();
     }
 
 }

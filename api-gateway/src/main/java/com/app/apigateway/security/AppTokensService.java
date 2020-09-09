@@ -92,7 +92,7 @@ public class AppTokensService {
         return new UsernamePasswordAuthenticationToken(
                 user.getData().getUsername(),
                 null,
-                List.of(new SimpleGrantedAuthority(user.getData().getRole().toString())));
+                List.of(new SimpleGrantedAuthority(user.getData().getRole().getFullName())));
     }
 
     private Claims claims(String token) {

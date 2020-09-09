@@ -47,9 +47,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/user-admin").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
                 .and()
+                .httpBasic()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .and()
                 .addFilter(new com.app.apigateway.security.JwtAuthenticationFilter(authenticationManager(), appTokensService))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), appTokensService))
-                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), appTokensService));
     }
 
     @Override

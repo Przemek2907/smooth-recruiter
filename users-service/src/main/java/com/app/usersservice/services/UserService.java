@@ -8,8 +8,6 @@ import com.app.usersservice.model.User;
 import com.app.usersservice.repository.UserRepository;
 import com.app.usersservice.validator.CreateUserDtoValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

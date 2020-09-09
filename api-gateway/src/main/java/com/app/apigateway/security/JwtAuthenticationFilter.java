@@ -38,18 +38,27 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             HttpServletRequest request,
             HttpServletResponse response) throws AuthenticationException {
 
-        AuthUserDto authUserDto = null;
-        try {
-            authUserDto = new ObjectMapper().readValue(request.getInputStream(), AuthUserDto.class);
+        Authentication authentication = null;
 
-        } catch (IOException e) {
-            throw new AppSecurityException("Could not read user data credentials sent in the request body");
+        try {
+            AuthUserDto authUserDto = new ObjectMapper().readValue(request.getInputStream(), AuthUserDto.class);
+
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    authUserDto.getUsername(),
+                    authUserDto.getPassword(),
+                    Collections.emptyList()
+            ));
+        } catch (Exception e) {
+            try {
+                response.getWriter().append("Failed to log in - ").append(e.getMessage());
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().flush();
+                response.getWriter().close();
+            } catch (IOException ioException) {
+                throw new AppSecurityException("Failed to write response message");
+            }
         }
-        return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                authUserDto.getUsername(),
-                authUserDto.getPassword(),
-                Collections.emptyList()
-        ));
+        return authentication;
     }
 
     //this method is called when the attemptAuthentication is succesful - we generate the JWT token here
