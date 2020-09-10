@@ -79,11 +79,15 @@ public class AppTokensService {
 
     public UsernamePasswordAuthenticationToken parse(String token) {
         if (token == null) {
-            throw new AppSecurityException("token is null");
+            throw new AppSecurityException("Access token is null");
         }
 
         if (!token.startsWith(tokenBearer)) {
-            throw new AppSecurityException("token has incorrect format");
+            throw new AppSecurityException("Access token has incorrect format");
+        }
+
+        if (hasTokenExpired(token)) {
+            throw new AppSecurityException("Your access token has expired");
         }
 
         var accessToken = token.replace(tokenBearer, "");
@@ -93,6 +97,10 @@ public class AppTokensService {
                 user.getData().getUsername(),
                 null,
                 List.of(new SimpleGrantedAuthority(user.getData().getRole().getFullName())));
+    }
+
+    private boolean hasTokenExpired(String token) {
+        return expiration(token).after(new Date());
     }
 
     private Claims claims(String token) {
@@ -111,4 +119,5 @@ public class AppTokensService {
     private Long id(String token) {
         return Long.valueOf(claims(token).getSubject());
     }
+
 }

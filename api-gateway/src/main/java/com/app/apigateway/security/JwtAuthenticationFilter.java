@@ -73,7 +73,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         TokensDto jwtTokens = appTokensService.generateTokens(authResult);
 
         ResponseData bodyWithTokens = ResponseData.builder()
-                .data(jwtTokens)
+                .data(jwtTokens.getAccessToken())
                 .build();
 
         String accessToken = jwtTokens.getAccessToken();
@@ -89,7 +89,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // HEADER
         response.setHeader(HttpHeaders.AUTHORIZATION, appTokensService.tokenBearer + " " + accessToken);
-        response.setHeader(REFRESH_TOKEN_HEADER_STRING, appTokensService.tokenBearer + " " + refreshToken);
 
 
         response.getWriter().write(new ObjectMapper().writeValueAsString(bodyWithTokens.getData().toString()));
