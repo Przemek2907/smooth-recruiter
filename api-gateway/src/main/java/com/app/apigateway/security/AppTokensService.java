@@ -86,11 +86,12 @@ public class AppTokensService {
             throw new AppSecurityException("Access token has incorrect format");
         }
 
-        if (hasTokenExpired(token)) {
+        var accessToken = token.replace(tokenBearer, "");
+
+        if (hasTokenExpired(accessToken)) {
             throw new AppSecurityException("Your access token has expired");
         }
 
-        var accessToken = token.replace(tokenBearer, "");
         var userId = id(accessToken);
         var user = findUserProxy.getUser(userId);
         return new UsernamePasswordAuthenticationToken(
@@ -100,7 +101,7 @@ public class AppTokensService {
     }
 
     private boolean hasTokenExpired(String token) {
-        return expiration(token).after(new Date());
+        return new Date().after(expiration(token));
     }
 
     private Claims claims(String token) {
