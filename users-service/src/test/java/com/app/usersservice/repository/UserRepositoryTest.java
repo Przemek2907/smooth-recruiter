@@ -29,8 +29,8 @@ class UserRepositoryTest {
     // dla kazdego testu tworzona jest osobna instancja bazy danych
     @Test
     void test1() {
-        User u1 = User.builder().username("USER1").password("PWD1").build();
-        User u2 = User.builder().username("USER2").password("PWD2").build();
+        User u1 = User.builder().userEmail("test@mail.com").password("PWD1").build();
+        User u2 = User.builder().userEmail("test2@mail.com").password("PWD2").build();
         testEntityManager.persist(u1);
         testEntityManager.persist(u2);
         testEntityManager.flush();
