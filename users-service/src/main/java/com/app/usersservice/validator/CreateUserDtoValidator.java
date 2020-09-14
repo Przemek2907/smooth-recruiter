@@ -17,12 +17,8 @@ public class CreateUserDtoValidator implements Validator<CreateUserDto> {
             errors.put("Object", "is null");
         }
 
-        if (!isUsernameCorrect(createUserDto.getUsername())) {
-            errors.put("username", "Username should");
-        }
-
-        if (!isUsernameLongEnough(createUserDto.getUsername())) {
-            errors.put("username length", "Username should contain at least 4 characters");
+        if (!isUsernameCorrect(createUserDto.getUserEmail())) {
+            errors.put("username", "Username should be in the form of email");
         }
 
         if (createUserDto.getPassword() == null) {
@@ -37,11 +33,7 @@ public class CreateUserDtoValidator implements Validator<CreateUserDto> {
     }
 
     private boolean isUsernameCorrect(String name) {
-        return name != null && name.matches("[A-Za-z]*");
-    }
-
-    private boolean isUsernameLongEnough(String name) {
-        return name !=null && name.length() >= 4;
+        return name != null && name.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
     }
 
     private boolean isPasswordCorrect(String pwd, String pwdConfirmation) {

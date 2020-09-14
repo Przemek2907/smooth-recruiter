@@ -38,8 +38,8 @@ public class UserService {
             throw new UserServiceException(errorMessage);
         }
 
-        if (userRepository.findByUsername(createUserDto.getUsername()).isPresent()) {
-            throw new UserServiceException("User with the following name : " + createUserDto.getUsername() + " already exists");
+        if (userRepository.findByUserEmail(createUserDto.getUserEmail()).isPresent()) {
+            throw new UserServiceException("User with the following login : " + createUserDto.getUserEmail() + " already exists");
         }
 
         User userBeingRegistered = ModelMapper.toUser(createUserDto);
@@ -63,8 +63,8 @@ public class UserService {
     }
 
     public GetUserDto getUserByUserName(String name) {
-        return ModelMapper.toUserDto(userRepository.findByUsername(name).orElseThrow(
-                () -> new UserServiceException("Could not find user with name : " + name)
+        return ModelMapper.toUserDto(userRepository.findByUserEmail(name).orElseThrow(
+                () -> new UserServiceException("Could not find user with login : " + name)
         ));
     }
 }

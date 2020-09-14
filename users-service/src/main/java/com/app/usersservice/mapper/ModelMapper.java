@@ -9,7 +9,7 @@ public interface ModelMapper {
     static GetUserDto toUserDto (User user) {
         return user == null ? null : GetUserDto.builder()
                 .id(user.getId())
-                .username(user.getUsername())
+                .username(user.getUserEmail())
                 .password(user.getPassword())
                 .role(user.getRole())
                 .build();
@@ -17,7 +17,7 @@ public interface ModelMapper {
 
     static User toUser (CreateUserDto createUserDto) {
         return createUserDto == null ? null : User.builder()
-                .username(createUserDto.getUsername())
+                .userEmail(createUserDto.getUserEmail())
                 .password(createUserDto.getPassword())
                 .role(createUserDto.getRole())
                 .build();
