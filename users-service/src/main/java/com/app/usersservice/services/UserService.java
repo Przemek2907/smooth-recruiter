@@ -2,6 +2,7 @@ package com.app.usersservice.services;
 
 import com.app.usersservice.dto.CreateUserDto;
 import com.app.usersservice.dto.GetUserDto;
+import com.app.usersservice.dto.InviteUserDto;
 import com.app.usersservice.exceptions.UserServiceException;
 import com.app.usersservice.mapper.ModelMapper;
 import com.app.usersservice.model.User;
@@ -66,5 +67,10 @@ public class UserService {
         return ModelMapper.toUserDto(userRepository.findByUserEmail(name).orElseThrow(
                 () -> new UserServiceException("Could not find user with login : " + name)
         ));
+    }
+
+    public InviteUserDto inviteUser(InviteUserDto inviteUserDto) {
+
+        return inviteUserDto;
     }
 }

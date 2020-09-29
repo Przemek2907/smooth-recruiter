@@ -32,10 +32,6 @@ public class CreateUserDtoValidator implements Validator<CreateUserDto> {
         return errors;
     }
 
-    private boolean isUsernameCorrect(String name) {
-        return name != null && name.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-    }
-
     private boolean isPasswordCorrect(String pwd, String pwdConfirmation) {
         return Objects.equals(pwd, pwdConfirmation);
     }
