@@ -1,4 +1,4 @@
-package com.app.apigateway.security;
+package com.app.apigateway.security.service;
 
 import com.app.apigateway.exception.AppSecurityException;
 import com.app.apigateway.proxy.FindUserProxy;
@@ -74,7 +74,6 @@ public class AppTokensService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
-
     }
 
     public UsernamePasswordAuthenticationToken parse(String token) {
@@ -97,7 +96,7 @@ public class AppTokensService {
         return new UsernamePasswordAuthenticationToken(
                 user.getData().getUsername(),
                 null,
-                List.of(new SimpleGrantedAuthority(user.getData().getRole().getFullName())));
+                List.of(new SimpleGrantedAuthority(user.getData().getRole().toString())));
     }
 
     private boolean hasTokenExpired(String token) {

@@ -1,20 +1,16 @@
-package com.app.apigateway.security;
+package com.app.apigateway.security.filters;
 
-import com.app.apigateway.dto.ResponseData;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
+import com.app.apigateway.exception.AppSecurityException;
+import com.app.apigateway.security.service.AppTokensService;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
@@ -30,7 +26,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain chain) throws IOException {
+            FilterChain chain) {
 
         try {
 
@@ -41,11 +37,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             }
             chain.doFilter(request, response);
         } catch (Exception e) {
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setStatus(401);
-            response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseData.builder().error(e.getMessage()).build()));
-            response.getWriter().flush();
-            response.getWriter().close();
+            throw new AppSecurityException(e.getMessage());
         }
     }
 }

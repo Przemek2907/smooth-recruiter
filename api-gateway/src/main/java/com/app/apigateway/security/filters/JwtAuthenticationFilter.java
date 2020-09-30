@@ -1,11 +1,10 @@
-package com.app.apigateway.security;
+package com.app.apigateway.security.filters;
 
-import com.app.apigateway.dto.AuthUserDto;
-import com.app.apigateway.dto.ResponseData;
 import com.app.apigateway.exception.AppSecurityException;
+import com.app.apigateway.security.service.AppTokensService;
+import com.app.apigateway.security.dto.AuthenticationDataDto;
 import com.app.apigateway.security.dto.TokensDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,10 +22,8 @@ import java.util.Collections;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-
     private final AppTokensService appTokensService;
 
-    private static final String REFRESH_TOKEN_HEADER_STRING = "REFRESH_TOKEN";
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, AppTokensService appTokensService) {
         this.authenticationManager = authenticationManager;
@@ -37,28 +34,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(
             HttpServletRequest request,
             HttpServletResponse response) throws AuthenticationException {
-
-        Authentication authentication = null;
-
         try {
-            AuthUserDto authUserDto = new ObjectMapper().readValue(request.getInputStream(), AuthUserDto.class);
-
-            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    authUserDto.getUsername(),
-                    authUserDto.getPassword(),
+            var authenticationDataDto =
+                    new ObjectMapper().readValue(request.getInputStream(), AuthenticationDataDto.class);
+            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    authenticationDataDto.getUsername(),
+                    authenticationDataDto.getPassword(),
                     Collections.emptyList()
             ));
         } catch (Exception e) {
-            try {
-                response.getWriter().append("Failed to log in - ").append(e.getMessage());
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().flush();
-                response.getWriter().close();
-            } catch (IOException ioException) {
-                throw new AppSecurityException("Failed to write response message");
-            }
+            throw new AppSecurityException(e.getMessage());
         }
-        return authentication;
     }
 
     //this method is called when the attemptAuthentication is succesful - we generate the JWT token here
@@ -69,31 +55,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             FilterChain chain,
             Authentication authResult) throws IOException, ServletException {
 
-
-        TokensDto jwtTokens = appTokensService.generateTokens(authResult);
-
-        ResponseData bodyWithTokens = ResponseData.builder()
-                .data(jwtTokens.getAccessToken())
-                .build();
-
-        String accessToken = jwtTokens.getAccessToken();
-        String refreshToken = jwtTokens.getRefreshToken();
-
-        if ( accessToken == null ) {
-            throw new AppSecurityException("Unsuccessful authentication - access token is null exception");
-        }
-
-        if ( refreshToken == null ) {
-            throw new AppSecurityException("Unsuccessful authentication - refresh token is null exception");
-        }
-
-        // HEADER
-        response.setHeader(HttpHeaders.AUTHORIZATION, appTokensService.tokenBearer + " " + accessToken);
-
-
-        response.getWriter().write(new ObjectMapper().writeValueAsString(bodyWithTokens.getData().toString()));
-
+        TokensDto tokens = appTokensService.generateTokens(authResult);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.getWriter().write(new ObjectMapper().writeValueAsString(tokens));
         response.getWriter().flush();
         response.getWriter().close();
     }
