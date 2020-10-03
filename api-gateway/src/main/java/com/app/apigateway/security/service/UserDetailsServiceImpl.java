@@ -1,4 +1,4 @@
-package com.app.apigateway.security;
+package com.app.apigateway.security.service;
 
 import com.app.apigateway.dto.GetUserDto;
 import com.app.apigateway.dto.Role;
@@ -30,14 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        //TODO figure out how to map this into User object which is in different service
-        // response: I have added password field in the users-service and mapped it here - is that the correct way to do this?
-
-
-        GetUserDto userDto = findUserProxy.
-                getUser(username).getData();
-
-        log.info("My getUserDto object is {}", userDto );
+        GetUserDto userDto = findUserProxy.getUser(username).getData();
 
         if (userDto == null) {
             throw new UsernameNotFoundException("Username : " + username + " was not found");
@@ -47,11 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 userDto.getUsername(),
                 userDto.getPassword(),
                 true, true, true, true,
-                getAuthorities(userDto.getRole())
+                List.of(new SimpleGrantedAuthority(userDto.getRole().toString()))
         );
-    }
-
-    private List<GrantedAuthority> getAuthorities(Role role) {
-        return new ArrayList<>(Arrays.asList(new SimpleGrantedAuthority(role.getFullName())));
     }
 }
