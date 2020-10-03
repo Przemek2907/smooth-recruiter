@@ -30,10 +30,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        //TODO figure out how to map this into User object which is in different service
-        // response: I have added password field in the users-service and mapped it here - is that the correct way to do this?
-
-
         GetUserDto userDto = findUserProxy.getUser(username).getData();
 
         if (userDto == null) {

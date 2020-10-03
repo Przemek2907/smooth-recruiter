@@ -4,6 +4,7 @@ import com.app.apigateway.security.filters.JwtAuthenticationFilter;
 import com.app.apigateway.security.filters.JwtAuthorizationFilter;
 import com.app.apigateway.security.service.AppTokensService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
@@ -23,6 +24,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+@Slf4j
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
@@ -39,7 +41,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return (httpServletRequest, httpServletResponse, e) -> {
             httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            httpServletResponse.getWriter().write(new ObjectMapper().writeValueAsString(e.getMessage()));
+            log.error("My auth error message {}", e.getMessage());
+            httpServletResponse.getWriter().write(new ObjectMapper().writeValueAsString("BAD CREDENTIALS"));
             httpServletResponse.getWriter().flush();
             httpServletResponse.getWriter().close();
         };
@@ -48,6 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return (httpServletRequest, httpServletResponse, e) -> {
+            log.error("Was I here???");
             httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
             httpServletResponse.getWriter().write(new ObjectMapper().writeValueAsString(e.getMessage()));
             httpServletResponse.getWriter().flush();
