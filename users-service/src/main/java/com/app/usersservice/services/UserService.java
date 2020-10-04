@@ -51,7 +51,7 @@ public class UserService {
         User userBeingRegistered = ModelMapper.toUser(createUserDto);
         Optional<Role> userRole =  roleRepository.findByRoleName(createUserDto.getRole());
         userRole.ifPresent(
-                (role) -> userBeingRegistered.setRoles(Set.of(role))
+                (role) -> userBeingRegistered.setRole(userRole.get())
         );
 
         // TODO should I encrypt the password here before saving it into the db

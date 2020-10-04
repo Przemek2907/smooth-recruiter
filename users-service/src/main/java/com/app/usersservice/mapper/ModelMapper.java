@@ -14,7 +14,7 @@ public interface ModelMapper {
                 .id(user.getId())
                 .username(user.getUserEmail())
                 .password(user.getPassword())
-                .roles(user.getRoles() == null ? null : user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet()))
+                .role(user.getRole() == null ? null : user.getRole().toString())
                 .build();
     }
 

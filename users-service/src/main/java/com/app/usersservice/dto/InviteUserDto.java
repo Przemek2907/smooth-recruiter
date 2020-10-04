@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +14,6 @@ public class InviteUserDto {
     private String userEmail;
     private String userFirstName;
     private String userLastName;
-    private Set<String> roles;
+    private String role;
 
 }

@@ -17,5 +17,5 @@ public class GetUserDto {
     private Long id;
     private String username;
     private String password;
-    private Set<String> roles;
+    private String role;
 }
