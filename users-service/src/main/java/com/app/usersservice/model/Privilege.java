@@ -6,28 +6,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.Set;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class InviteUserToken {
+public class Privilege {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "PRIVILEGE_NAME")
+    private String privilegeName;
 
-    private String token;
-
-    @OneToOne
-    @JoinColumn(nullable = false, name = "user_id")
-    private User user;
-
-    private Date expirationDate;
-
-
+    @ManyToMany(mappedBy = "privileges")
+    Set<Role> roles;
 }

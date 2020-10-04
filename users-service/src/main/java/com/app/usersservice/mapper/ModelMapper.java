@@ -2,7 +2,10 @@ package com.app.usersservice.mapper;
 
 import com.app.usersservice.dto.CreateUserDto;
 import com.app.usersservice.dto.GetUserDto;
+import com.app.usersservice.model.Role;
 import com.app.usersservice.model.User;
+
+import java.util.stream.Collectors;
 
 public interface ModelMapper {
 
@@ -11,7 +14,7 @@ public interface ModelMapper {
                 .id(user.getId())
                 .username(user.getUserEmail())
                 .password(user.getPassword())
-                .role(user.getRole())
+                .roles(user.getRoles() == null ? null : user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet()))
                 .build();
     }
 
@@ -19,7 +22,6 @@ public interface ModelMapper {
         return createUserDto == null ? null : User.builder()
                 .userEmail(createUserDto.getUserEmail())
                 .password(createUserDto.getPassword())
-                .role(createUserDto.getRole())
                 .build();
     }
 }

@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Set;
 
 @Data
 @Builder
@@ -23,19 +25,16 @@ public class User {
 
     private String password;
 
-    @Enumerated(value = EnumType.STRING)
-    private Role role;
-
     @Column(name = "FIRST_NAME")
     private String firstName;
 
     @Column(name = "LAST_NAME")
     private String lastName;
 
-    @Enumerated(value = EnumType.STRING)
-    private BusinessRole businessRole;
-
     @Column(name = "IS_ENABLED")
     private Boolean enabled;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Role role;
 
 }

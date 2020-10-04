@@ -5,7 +5,9 @@ import com.app.usersservice.dto.GetUserDto;
 import com.app.usersservice.dto.InviteUserDto;
 import com.app.usersservice.exceptions.UserServiceException;
 import com.app.usersservice.mapper.ModelMapper;
+import com.app.usersservice.model.Role;
 import com.app.usersservice.model.User;
+import com.app.usersservice.repository.RoleRepository;
 import com.app.usersservice.repository.UserRepository;
 import com.app.usersservice.validator.CreateUserDtoValidator;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -44,6 +49,10 @@ public class UserService {
         }
 
         User userBeingRegistered = ModelMapper.toUser(createUserDto);
+        Optional<Role> userRole =  roleRepository.findByRoleName(createUserDto.getRole());
+        userRole.ifPresent(
+                (role) -> userBeingRegistered.setRoles(Set.of(role))
+        );
 
         // TODO should I encrypt the password here before saving it into the db
         userBeingRegistered.setPassword(passwordEncoder.encode(userBeingRegistered.getPassword()));
