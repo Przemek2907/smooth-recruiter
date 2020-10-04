@@ -14,6 +14,8 @@ public class CreateUserDto {
 
     private Long id;
     private String userEmail;
+    private String firstName;
+    private String lastName;
     private String password;
     private String passwordConfirmation;
     private String role;

@@ -1,11 +1,9 @@
 package com.app.usersservice.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -22,6 +20,8 @@ public class Privilege {
     @Column(name = "PRIVILEGE_NAME")
     private String privilegeName;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToMany(mappedBy = "privileges")
-    Set<Role> roles;
+    Set<Role> roles = new HashSet<>();
 }

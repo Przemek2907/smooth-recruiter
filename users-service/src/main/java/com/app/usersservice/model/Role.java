@@ -1,12 +1,10 @@
 package com.app.usersservice.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -24,6 +22,8 @@ public class Role {
     @NaturalId
     private String roleName;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
@@ -32,7 +32,7 @@ public class Role {
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "privilege_id")
     )
-    private Set<Privilege> privileges;
+    private Set<Privilege> privileges = new HashSet<>();
 
     public void addPrivilege(Privilege privilege) {
         privileges.add(privilege);
