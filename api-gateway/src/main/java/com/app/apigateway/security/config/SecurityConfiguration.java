@@ -1,5 +1,6 @@
 package com.app.apigateway.security.config;
 
+import com.app.apigateway.security.filters.CustomAuthenticationExceptionHandler;
 import com.app.apigateway.security.filters.JwtAuthenticationFilter;
 import com.app.apigateway.security.filters.JwtAuthorizationFilter;
 import com.app.apigateway.security.service.AppTokensService;
@@ -29,23 +30,14 @@ import java.util.Arrays;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final AppTokensService appTokensService;
+    private final CustomAuthenticationExceptionHandler authenticationExceptionHandler;
 
     public SecurityConfiguration(
             @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
-            AppTokensService appTokensService) {
+            AppTokensService appTokensService, CustomAuthenticationExceptionHandler authenticationExceptionHandler) {
         this.userDetailsService = userDetailsService;
         this.appTokensService = appTokensService;
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return (httpServletRequest, httpServletResponse, e) -> {
-            httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            log.error("My auth error message {}", e.getMessage());
-            httpServletResponse.getWriter().write(new ObjectMapper().writeValueAsString("BAD CREDENTIALS"));
-            httpServletResponse.getWriter().flush();
-            httpServletResponse.getWriter().close();
-        };
+        this.authenticationExceptionHandler = authenticationExceptionHandler;
     }
 
     @Bean
@@ -92,11 +84,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint())
                 .accessDeniedHandler(accessDeniedHandler())
 
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), appTokensService))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), appTokensService, authenticationExceptionHandler))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), appTokensService));
     }
 

@@ -6,6 +6,7 @@ import com.app.apigateway.security.service.AppTokensService;
 import com.app.apigateway.security.dto.AuthenticationDataDto;
 import com.app.apigateway.security.dto.TokensDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,17 +31,20 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final AuthenticationManager authenticationManager;
     private final AppTokensService appTokensService;
+    private final CustomAuthenticationExceptionHandler authenticationExceptionHandler;
 
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, AppTokensService appTokensService) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, AppTokensService appTokensService, CustomAuthenticationExceptionHandler authenticationExceptionHandler) {
         this.authenticationManager = authenticationManager;
         this.appTokensService = appTokensService;
+        this.authenticationExceptionHandler = authenticationExceptionHandler;
     }
 
+    @SneakyThrows
     @Override
     public Authentication attemptAuthentication(
             HttpServletRequest request,
-            HttpServletResponse response) throws AuthenticationException {
+            HttpServletResponse response) {
         Authentication authenticatedPrincipal = null;
         try {
             var authenticationDataDto =
@@ -50,8 +54,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     authenticationDataDto.getPassword(),
                     Collections.emptyList()
             ));
-        } catch (IOException e) {
-            throw new AppSecurityException(e.getMessage());
+        } catch (AuthenticationException exception) {
+            authenticationExceptionHandler.commence(request, response, exception);
         }
 
         return authenticatedPrincipal;
