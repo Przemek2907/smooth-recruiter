@@ -5,15 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetUserDto {
-
-    private Long id;
-    private String username;
-    private String password;
-    private Boolean isEnabled;
-    private Role role;
+public class GetInvitedUserDto {
+    private String userEmail;
+    private String userFirstName;
+    private String userLastName;
+    private String token;
 }

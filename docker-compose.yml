@@ -53,6 +53,19 @@ services:
     networks:
       - app-network
 
+  mail-service:
+    image: mail-service
+    restart: always
+    build:
+      context: ./email-service
+      dockerfile: Dockerfile
+    ports:
+      - 7800:7800
+    depends_on:
+      - eureka-server
+    networks:
+      - app-network
+
 networks:
   app-network:
 volumes:

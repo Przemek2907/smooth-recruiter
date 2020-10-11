@@ -39,7 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 userDto.getUsername(),
                 userDto.getPassword(),
-                true, true, true, true,
+                userDto.getIsEnabled(), true, true, true,
                 List.of(new SimpleGrantedAuthority(userDto.getRole().toString()))
         );
     }

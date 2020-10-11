@@ -65,7 +65,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(
-                        "/api/users/security/**",
+                        "/api/users/security/register/**",
                         "/v2/**",
                         "/v2/api-docs",
                         "/configuration/ui",
@@ -76,6 +76,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/swagger-resources/configuration/ui",
                         "/swagger-ui.html"
                 ).permitAll()
+                .antMatchers("/api/users/security/invite").hasRole("ADMIN")
                 .antMatchers("/api/service/users").hasRole("USER")
                 .antMatchers("/api/service/admins").hasRole("ADMIN")
                 .antMatchers("/api/service/user-admin").hasAnyRole("USER", "ADMIN")
