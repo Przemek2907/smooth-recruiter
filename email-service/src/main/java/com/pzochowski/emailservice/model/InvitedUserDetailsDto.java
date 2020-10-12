@@ -13,6 +13,5 @@ public class InvitedUserDetailsDto {
     private String userEmail;
     private String userFirstName;
     private String userLastName;
-    private String verificationToken;
-    private String finishRegistrationLink;
+    private String token;
 }
