@@ -1,6 +1,7 @@
 package com.app.usersservice.services;
 
 import com.app.usersservice.dto.CreateUserDto;
+import com.app.usersservice.dto.DisplayedUserDto;
 import com.app.usersservice.dto.GetUserDto;
 import com.app.usersservice.dto.InviteUserDto;
 import com.app.usersservice.exceptions.UserServiceException;
@@ -66,9 +67,9 @@ public class UserService {
 
     }
 
-    public List<GetUserDto> getAllUsers() {
+    public List<DisplayedUserDto> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(ModelMapper::toUserDto)
+                .map(ModelMapper::toDisplayedUserDto)
                 .collect(Collectors.toList());
     }
 

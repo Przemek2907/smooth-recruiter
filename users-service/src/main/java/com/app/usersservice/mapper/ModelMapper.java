@@ -17,6 +17,20 @@ public interface ModelMapper {
                 .build();
     }
 
+    static DisplayedUserDto toDisplayedUserDto (User user) {
+        return user == null ? null : DisplayedUserDto.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getUserEmail())
+                .assignedRole(RoleDto.builder()
+                        .id(user.getRole().getId())
+                        .roleName(user.getRole().getRoleName())
+                        .build())
+                .isEnabled(user.getEnabled())
+                .build();
+    }
+
     static User toUser (CreateUserDto createUserDto) {
         return createUserDto == null ? null : User.builder()
                 .userEmail(createUserDto.getUserEmail())

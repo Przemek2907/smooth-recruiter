@@ -1,5 +1,6 @@
 package com.app.usersservice.controllers;
 
+import com.app.usersservice.dto.DisplayedUserDto;
 import com.app.usersservice.dto.GetUserDto;
 import com.app.usersservice.dto.ResponseData;
 import com.app.usersservice.services.UserService;
@@ -16,9 +17,9 @@ public class FindUserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseData<List<GetUserDto>> getAllUsers() {
+    public ResponseData<List<DisplayedUserDto>> getAllUsers() {
         return ResponseData
-                .<List<GetUserDto>>builder()
+                .<List<DisplayedUserDto>>builder()
                 .data(userService.getAllUsers())
                 .build();
     }
