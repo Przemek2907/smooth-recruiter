@@ -1,7 +1,7 @@
 package com.app.apigateway.security.service;
 
 import com.app.apigateway.exception.AppSecurityException;
-import com.app.apigateway.proxy.FindUserProxy;
+import com.app.apigateway.proxy.UserServiceProxy;
 import com.app.apigateway.security.dto.TokensDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -32,9 +32,9 @@ public class AppTokensService {
 
     private final SecretKey secretKey;
 
-    private final FindUserProxy findUserProxy;
+    private final UserServiceProxy findUserProxy;
 
-    public AppTokensService(SecretKey secretKey, FindUserProxy findUserProxy) {
+    public AppTokensService(SecretKey secretKey, UserServiceProxy findUserProxy) {
         this.secretKey = secretKey;
         this.findUserProxy = findUserProxy;
     }

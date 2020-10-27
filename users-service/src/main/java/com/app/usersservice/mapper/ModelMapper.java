@@ -2,6 +2,7 @@ package com.app.usersservice.mapper;
 
 import com.app.usersservice.dto.*;
 import com.app.usersservice.model.InviteUserToken;
+import com.app.usersservice.model.Role;
 import com.app.usersservice.model.User;
 
 public interface ModelMapper {
@@ -12,7 +13,7 @@ public interface ModelMapper {
                 .username(user.getUserEmail())
                 .password(user.getPassword())
                 .isEnabled(user.getEnabled())
-                .role(user.getRole() == null ? null : Role.valueOf(user.getRole().getRoleName()))
+                .role(user.getRole() == null ? null : user.getRole().getRoleName())
                 .build();
     }
 
@@ -31,6 +32,13 @@ public interface ModelMapper {
                 .userFirstName(inviteUserToken.getUser().getFirstName())
                 .userLastName(inviteUserToken.getUser().getLastName())
                 .token(inviteUserToken.getToken())
+                .build();
+    }
+
+    static RoleDto toRoleDto(Role role) {
+        return role == null ? null : RoleDto.builder()
+                .id(role.getId())
+                .roleName(role.getRoleName())
                 .build();
     }
 }

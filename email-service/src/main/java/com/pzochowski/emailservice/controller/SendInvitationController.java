@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -19,9 +18,13 @@ public class SendInvitationController {
     private final MailSenderService mailSenderService;
 
     @PostMapping("/invitation/send")
-    CompletableFuture<ResponseData<String>> sendInvitationEmail(@RequestBody InvitedUserDetailsDto invitedUserDetailsDto) {
-        return mailSenderService
-                .sendInvitationEmail(invitedUserDetailsDto)
-                .thenApply(result -> ResponseData.<String>builder().data(result).build());
+    ResponseData<String> sendInvitationEmail(@RequestBody InvitedUserDetailsDto invitedUserDetailsDto) {
+        mailSenderService
+                .sendInvitationEmail(invitedUserDetailsDto);
+        log.info("DEBUG========================1");
+        return ResponseData.<String>builder()
+                .data("Invitation email has been sent to address: " + invitedUserDetailsDto.getUserEmail())
+                .error(null)
+                .build();
     }
 }

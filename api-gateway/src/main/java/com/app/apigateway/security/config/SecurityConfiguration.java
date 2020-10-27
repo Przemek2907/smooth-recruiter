@@ -43,7 +43,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return (httpServletRequest, httpServletResponse, e) -> {
-            log.error("Was I here???");
             httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
             httpServletResponse.getWriter().write(new ObjectMapper().writeValueAsString(e.getMessage()));
             httpServletResponse.getWriter().flush();
@@ -76,7 +75,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/swagger-resources/configuration/ui",
                         "/swagger-ui.html"
                 ).permitAll()
-                .antMatchers("/api/users/security/invite").hasRole("ADMIN")
+                .antMatchers("/api/users/security/**").hasRole("ADMIN")
                 .antMatchers("/api/service/users").hasRole("USER")
                 .antMatchers("/api/service/admins").hasRole("ADMIN")
                 .antMatchers("/api/service/user-admin").hasAnyRole("USER", "ADMIN")
@@ -111,6 +110,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         configuration.setAllowedOrigins(new ArrayList<>(Arrays.asList("http://localhost:4200", "*", "/**")));
         configuration.addAllowedHeader("Access-Control-Allow-Origin");
+        configuration.addAllowedHeader("Authorization");
         configuration.addAllowedHeader("Content-Type");
         configuration.setAllowedMethods(new ArrayList<>(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")));
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

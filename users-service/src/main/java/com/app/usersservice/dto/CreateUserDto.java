@@ -1,6 +1,5 @@
 package com.app.usersservice.dto;
 
-import com.app.usersservice.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

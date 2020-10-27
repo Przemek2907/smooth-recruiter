@@ -1,21 +1,16 @@
 package com.app.apigateway.security.service;
 
 import com.app.apigateway.dto.GetUserDto;
-import com.app.apigateway.dto.Role;
-import com.app.apigateway.proxy.FindUserProxy;
+import com.app.apigateway.proxy.UserServiceProxy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -25,7 +20,7 @@ import java.util.List;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 
-    private final FindUserProxy findUserProxy;
+    private final UserServiceProxy findUserProxy;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

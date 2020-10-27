@@ -19,6 +19,7 @@ public class CustomAuthenticationExceptionHandler implements AuthenticationEntry
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
         httpServletResponse.getWriter().write(new ObjectMapper().writeValueAsString(e.getMessage()));
+        httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
         httpServletResponse.getWriter().flush();
         httpServletResponse.getWriter().close();
     }
